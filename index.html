@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPortfolio — Git Projects MVP</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Tailwind Config Personalizado -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        offwhite: '#F8F9FA',
+                        'offwhite-card': '#FFFFFF',
+                        'offwhite-subtle': '#F1F3F5',
+                        navy: {
+                            DEFAULT: '#1A2332',
+                            light: '#2A3544',
+                            muted: '#5A6A7A',
+                            border: 'rgba(26, 35, 50, 0.10)'
+                        },
+                        accent: {
+                            orange: '#F59E0B',
+                            green: '#10B981',
+                            blue: '#3B82F6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    },
+                    backgroundImage: {
+                        'hero-gradient': 'linear-gradient(180deg, #8BA3C4 0%, #B8C5D4 35%, #D8DEE6 65%, #E8ECF0 100%)'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-full flex flex-col justify-between selection:bg-navy selection:text-white">
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-navy text-white px-5 py-3 rounded-xl shadow-2xl opacity-0 translate-y-4 pointer-events-none transition-all duration-300 border border-white/10">
+        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+        <span id="toast-message" class="text-sm font-medium">Comando copiado para a área de transferência!</span>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- 1. CABEÇALHO (HEADER) -->
+        <header class="py-5 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-navy text-white flex items-center justify-center font-bold font-mono text-lg shadow-md">
+                    &lt;/&gt;
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-navy leading-tight">LUCAS SILVA</h1>
+                    <p class="text-xs text-navy-muted font-medium">Software Engineer & Open Source</p>
+                </div>
+            </div>
+
+            <!-- Links e Ações -->
+            <nav class="flex items-center gap-3 sm:gap-4">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-full border border-navy/15 bg-white/40 text-navy hover:bg-navy hover:text-white transition-all duration-200" title="Perfil no GitHub">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-full border border-navy/15 bg-white/40 text-navy hover:bg-navy hover:text-white transition-all duration-200" title="Perfil no LinkedIn">
+                    <i data-lucide="linkedin" class="w-4 h-4"></i>
+                </a>
+                <a href="mailto:contato@exemplo.com" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy text-white text-xs font-semibold hover:bg-navy-light transition-all duration-200 shadow-sm">
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    <span>Contato</span>
+                </a>
+            </nav>
+        </header>
+
+        <!-- 2. SEÇÃO HERO & BUSCA -->
+        <section class="py-10 md:py-14 text-center max-w-3xl mx-auto">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/50 text-navy text-xs font-semibold border border-white/60 mb-5 shadow-sm backdrop-blur-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Disponível para novos projetos
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-navy tracking-tight leading-tight mb-4">
+                Repositórios, Bibliotecas e<br class="hidden sm:block"> Experimentos.
+            </h2>
+            <p class="text-sm sm:text-base text-navy-muted mb-8 leading-relaxed max-w-xl mx-auto">
+                Explore meus projetos de código aberto hospedados no GitHub. Filtre por linguagens ou busque por palavras-chave específicas.
+            </p>
+
+            <!-- Barra de Pesquisa -->
+            <div class="relative max-w-2xl mx-auto">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-navy-muted">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </div>
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Buscar repositório por nome, descrição ou tecnologia..." 
+                    class="w-full pl-11 pr-10 py-3.5 bg-white border border-white/80 rounded-2xl text-sm text-navy placeholder:text-navy-muted/60 focus:outline-none focus:ring-2 focus:ring-navy/30 focus:border-transparent shadow-md transition-all"
+                >
+                <button 
+                    id="clear-search" 
+                    class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-navy-muted hover:text-navy"
+                    title="Limpar busca"
+                >
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- 3. TAGS DE FILTRO DE LINGUAGENS -->
+            <div class="flex flex-wrap items-center justify-center gap-2 mt-6" id="language-filters">
+                <!-- Injetado dinamicamente via JS -->
+            </div>
+        </section>
+
+        <!-- SUBHEADER DE RESULTADOS -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 mb-6 border-b border-navy/10">
+            <div class="text-xs font-semibold text-navy-muted uppercase tracking-wider">
+                Exibindo <span id="repo-count" class="text-navy font-bold">0</span> repositórios
+            </div>
+            <!-- Ordenação -->
+            <div class="flex items-center gap-2 text-xs">
+                <span class="text-navy-muted">Ordenar por:</span>
+                <select id="sort-select" class="bg-white border border-navy/10 rounded-lg px-2.5 py-1.5 text-navy font-medium focus:outline-none focus:ring-1 focus:ring-navy shadow-sm">
+                    <option value="stars">Mais Estrelas ⭐</option>
+                    <option value="updated">Mais Recentes 🕒</option>
+                    <option value="name">Nome (A-Z) 🔤</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 4. GRADE DE CARDS DOS REPOSITÓRIOS -->
+        <main id="repo-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+            <!-- Cards gerados via Javascript -->
+        </main>
+
+        <!-- ESTADO VAZIO (NENHUM RESULTADO) -->
+        <div id="empty-state" class="hidden py-16 text-center max-w-md mx-auto">
+            <div class="w-12 h-12 rounded-full bg-white/60 text-navy flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <i data-lucide="folder-search" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-bold text-navy mb-1">Nenhum repositório encontrado</h3>
+            <p class="text-xs text-navy-muted mb-4">Tente buscar por outro termo ou selecione um filtro de linguagem diferente.</p>
+            <button id="reset-filters-btn" class="px-4 py-2 bg-navy text-white text-xs font-semibold rounded-lg hover:bg-navy-light transition-all">
+                Redefinir filtros
+            </button>
+        </div>
+
+    </div>
+
+    <!-- 5. RODAPÉ (FOOTER) -->
+    <footer class="mt-auto border-t border-navy/10 py-8 bg-white/40 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-navy-muted">
+            <div class="flex items-center gap-2">
+                <span>© 2026 Lucas Silva. Desenvolvido com foco em performance e simplicidade.</span>
+            </div>
+            <div class="flex items-center gap-4 font-medium">
+                <a href="https://github.com" target="_blank" class="hover:text-navy transition-colors">GitHub</a>
+                <span>•</span>
+                <a href="https://linkedin.com" target="_blank" class="hover:text-navy transition-colors">LinkedIn</a>
+                <span>•</span>
+                <a href="#" class="hover:text-navy transition-colors">Voltar ao topo ↑</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript externo -->
+    <script src="app.js"></script>
+</body>
+</html>

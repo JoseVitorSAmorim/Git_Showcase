@@ -1,0 +1,51 @@
+/* ===== Tailwind Custom Config is applied via HTML script ===== */
+
+/* ===== Base Styles ===== */
+body {
+    background: linear-gradient(180deg, #7994B8 0%, #8BA3C4 18%, #A8B8C9 40%, #C8D0D9 65%, #E0E3E7 85%, #E8E6E1 100%);
+    background-attachment: fixed;
+    color: #1A2332;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(26, 35, 50, 0.25);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(26, 35, 50, 0.4);
+}
+
+/* ===== Card Styles ===== */
+.repo-card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 20px rgba(26, 35, 50, 0.06);
+}
+
+.repo-card:hover {
+    background: #FFFFFF;
+    border-color: rgba(26, 35, 50, 0.12);
+    box-shadow: 0 12px 32px rgba(26, 35, 50, 0.1);
+    transform: translateY(-3px);
+}
+
+/* Soft glass effect for header */
+.header-glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
