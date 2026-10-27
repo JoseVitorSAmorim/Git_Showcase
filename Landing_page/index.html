@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Git Showcase — Plataforma Integrada de Alunos</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="script.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="antialiased selection:bg-navy selection:text-white flex flex-col min-h-screen">
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed top-20 right-5 z-[100] flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- HEADER / NAVEGAÇÃO -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 py-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+      
+      <!-- LOGO -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-navy text-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
+          <i data-lucide="code-2" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-mono font-bold text-lg text-navy tracking-tight">Git Showcase</span>
+            <span class="text-[10px] bg-navy/10 text-navy font-mono font-semibold px-2 py-0.5 rounded-full border border-navy/20">COLÉGIO</span>
+          </div>
+          <p class="text-[11px] font-semibold text-navy-muted tracking-wide -mt-0.5">Plataforma Integrada de Alunos</p>
+        </div>
+      </a>
+
+      <!-- MENU DESKTOP -->
+      <nav class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-navy-muted">
+        <a href="#sobre" class="hover:text-navy transition-colors">Sobre</a>
+        <a href="#recursos" class="hover:text-navy transition-colors">Recursos</a>
+        <a href="#projetos" class="hover:text-navy transition-colors">Vitrine de Projetos</a>
+        <a href="#depoimentos" class="hover:text-navy transition-colors">Depoimentos</a>
+      </nav>
+
+      <!-- BOTÃO DE ATALHO DE ACESSO -->
+      <div class="flex items-center gap-3">
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full glass-badge text-xs font-medium text-navy-light shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Rede Escolar Ativa</span>
+        </div>
+
+        <button 
+          onclick="openLoginModal()" 
+          class="px-4 py-2.5 rounded-xl bg-navy text-white text-xs font-mono font-bold hover:bg-navy-light active:scale-95 transition-all duration-200 shadow-md flex items-center gap-2 cursor-pointer"
+        >
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>Acessar Portal</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section id="sobre" class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
+    
+    <!-- Esferas Decorativas de Fundo -->
+    <div class="absolute top-10 left-1/4 w-96 h-96 bg-blue-300/30 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+    <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-indigo-300/20 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Textos do Hero -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-badge text-xs font-mono font-bold text-navy shadow-sm">
+            <span class="px-2 py-0.5 rounded-md bg-navy text-white text-[10px]">BETA v2.4</span>
+            <span>Ambiente Exclusivo de Aprendizado e Código</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-navy font-mono leading-[1.15] tracking-tight">
+            Onde os estudantes do colégio <span class="underline decoration-navy/30 underline-offset-8">transformam código</span> em portfólio.
+          </h1>
+
+          <p class="text-sm sm:text-base text-navy-muted max-w-2xl mx-auto lg:mx-0 leading-relaxed font-sans">
+            O <strong>Git Showcase</strong> é a plataforma oficial do colégio criada para alunos de Tecnologia, Programação e Robótica. Centralize seus projetos da turma, receba feedbacks de professores e prepare-se para o mercado e faculdade.
+          </p>
+
+          <div class="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <button 
+              onclick="openLoginModal()"
+              class="w-full sm:w-auto px-7 py-4 rounded-xl bg-navy text-white font-mono font-bold text-sm hover:bg-navy-light active:scale-95 transition-all shadow-xl flex items-center justify-center gap-3 cursor-pointer"
+            >
+              <span>Entrar no Portal do Aluno</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+
+            <a 
+              href="#projetos"
+              class="w-full sm:w-auto px-6 py-4 rounded-xl glass-card font-mono font-semibold text-xs text-navy hover:bg-white/80 transition-all flex items-center justify-center gap-2 text-center"
+            >
+              <i data-lucide="layout-grid" class="w-4 h-4"></i>
+              Explorar Projetos da Turma
+            </a>
+          </div>
+
+          <!-- Tags rápidas -->
+          <div class="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-xs text-navy-muted font-mono">
+            <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> Acesso com login escolar</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> Validação de Professores</span>
+          </div>
+
+        </div>
+
+        <!-- Visual / Terminal Mockup em Glassmorphism -->
+        <div class="lg:col-span-5">
+          <div class="glass-card rounded-3xl p-5 sm:p-6 shadow-2xl relative border border-white/80">
+            
+            <!-- Window header -->
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-navy/10">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-400"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+              </div>
+              <span class="font-mono text-[11px] font-semibold text-navy-muted flex items-center gap-1">
+                <i data-lucide="terminal" class="w-3.5 h-3.5"></i> git-showcase-terminal.js
+              </span>
+              <span class="text-[10px] bg-emerald-500/10 text-emerald-700 font-mono font-bold px-2 py-0.5 rounded">ONLINE</span>
+            </div>
+
+            <!-- Fake Terminal Code Output -->
+            <div class="font-mono text-xs space-y-3 bg-navy/95 text-slate-200 p-4 rounded-2xl shadow-inner border border-navy/40 overflow-hidden">
+              <div class="text-slate-400">// Projeto em Destaque — 3º Ano Ensino Médio</div>
+              <div class="flex gap-2 text-emerald-400">
+                <span class="text-slate-500">$</span>
+                <span>npm run deploy:projeto-escola</span>
+              </div>
+              <div class="text-sky-300 pl-4">
+                ✔ Compilando código de alunos...<br>
+                ✔ Conectado ao banco de dados do Colégio.<br>
+                ✔ Avaliação dos mentores: <span class="text-amber-300 font-bold">Nota 10.0 ⭐</span>
+              </div>
+              <div class="p-3 bg-white/10 rounded-xl border border-white/10 mt-3 text-[11px]">
+                <div class="text-amber-300 font-bold mb-1">🚀 Status do Aluno:</div>
+                <div class="text-slate-300">"Sistema de Automação de Horta Escolar com IoT e ESP32 pronto para apresentação na Feira de Ciências!"</div>
+              </div>
+            </div>
+
+            <!-- Mini card inferior no terminal -->
+            <div class="mt-4 p-3 bg-white/70 rounded-2xl flex items-center justify-between border border-navy/10 text-xs">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-navy text-white flex items-center justify-center font-mono font-bold text-xs">
+                  3ºA
+                </div>
+                <div>
+                  <p class="font-bold text-navy leading-none">Turma de Programação Web</p>
+                  <p class="text-[11px] text-navy-muted mt-0.5">8 Trabalhos Entregues Hoje</p>
+                </div>
+              </div>
+              <span class="text-emerald-700 font-mono font-bold text-[11px] bg-emerald-100 px-2.5 py-1 rounded-lg">100% OK</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO DE MÉTRICAS DA ESCOLA -->
+  <section class="py-8 bg-white/20 backdrop-blur-md border-y border-white/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        
+        <div class="p-4">
+          <div class="text-3xl sm:text-4xl font-extrabold font-mono text-navy">+150</div>
+          <div class="text-xs font-semibold text-navy-muted uppercase tracking-wider mt-1">Projetos Publicados</div>
+        </div>
+
+        <div class="p-4">
+          <div class="text-3xl sm:text-4xl font-extrabold font-mono text-navy">8</div>
+          <div class="text-xs font-semibold text-navy-muted uppercase tracking-wider mt-1">Turmas Conectadas</div>
+        </div>
+
+        <div class="p-4">
+          <div class="text-3xl sm:text-4xl font-extrabold font-mono text-navy">12</div>
+          <div class="text-xs font-semibold text-navy-muted uppercase tracking-wider mt-1">Linguagens & Stacks</div>
+        </div>
+
+        <div class="p-4">
+          <div class="text-3xl sm:text-4xl font-extrabold font-mono text-navy">100%</div>
+          <div class="text-xs font-semibold text-navy-muted uppercase tracking-wider mt-1">Interno & Seguro</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO RECURSOS / COMO FUNCIONA -->
+  <section id="recursos" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabeçalho de Seção -->
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="font-mono text-xs font-bold uppercase tracking-wider text-navy bg-white/60 px-3 py-1 rounded-full border border-navy/10">
+          Recursos Exclusivos
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-navy font-mono tracking-tight mt-3">
+          Tudo o que você precisa para evoluir na programação escolar
+        </h2>
+        <p class="text-sm text-navy-muted mt-2">
+          Desenvolvido sob medida para a dinâmica de salas de aula, laboratórios e feiras de tecnologia do colégio.
+        </p>
+      </div>
+
+      <!-- Grid de 4 Cards -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Card 1 -->
+        <div class="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-navy/10 text-navy flex items-center justify-center mb-5 font-bold">
+              <i data-lucide="git-branch" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-mono font-bold text-lg text-navy mb-2">Vitrine Git Escolar</h3>
+            <p class="text-xs text-navy-muted leading-relaxed">
+              Publique seus códigos em uma galeria organizada por matéria e semestre.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-navy/10 text-[11px] font-mono font-semibold text-navy flex items-center gap-1">
+            <span>Integração Simplificada</span> <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-navy/10 text-navy flex items-center justify-center mb-5 font-bold">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-mono font-bold text-lg text-navy mb-2">Feedback de Professores</h3>
+            <p class="text-xs text-navy-muted leading-relaxed">
+              Receba avaliações detalhadas, revisões de código e comentários dos professores diretamente no seu projeto.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-navy/10 text-[11px] font-mono font-semibold text-navy flex items-center gap-1">
+            <span>Notas & Comentários</span> <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-navy/10 text-navy flex items-center justify-center mb-5 font-bold">
+              <i data-lucide="briefcase" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-mono font-bold text-lg text-navy mb-2">Portfólio Profissional</h3>
+            <p class="text-xs text-navy-muted leading-relaxed">
+              Crie um histórico comprovado de projetos para apresentar em vestibulinhos, olimpíadas acadêmicas e entrevistas de estágio.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-navy/10 text-[11px] font-mono font-semibold text-navy flex items-center gap-1">
+            <span>Preparação Acadêmica</span> <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-navy/10 text-navy flex items-center justify-center mb-5 font-bold">
+              <i data-lucide="users" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-mono font-bold text-lg text-navy mb-2">Colaboração Inter-Turmas</h3>
+            <p class="text-xs text-navy-muted leading-relaxed">
+              Forme grupos entre turmas do 1º, 2º e 3º ano do Ensino Médio Técnico para construir grandes projetos integradores.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-navy/10 text-[11px] font-mono font-semibold text-navy flex items-center gap-1">
+            <span>Trabalho em Equipe</span> <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SEÇÃO VITRINE DE PROJETOS DE ALUNOS COM FILTROS -->
+  <section id="projetos" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabeçalho -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+          <span class="font-mono text-xs font-bold uppercase tracking-wider text-navy bg-white/60 px-3 py-1 rounded-full border border-navy/10">
+            Trabalhos dos Alunos
+          </span>
+          <h2 class="text-3xl font-extrabold text-navy font-mono tracking-tight mt-3">
+            Vitrine de Projetos Recentes
+          </h2>
+          <p class="text-xs sm:text-sm text-navy-muted mt-1">
+            Confira algumas das melhores produções criadas nas aulas de tecnologia do colégio.
+          </p>
+        </div>
+
+        <!-- Filtros por Categoria -->
+        <div class="w-full min-w-0 md:w-auto flex items-center gap-1.5 p-1.5 rounded-2xl glass-card overflow-x-auto max-w-full">
+          <button onclick="filterProjects('all')" class="project-filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all bg-navy text-white shadow-sm" data-category="all">
+            Todos
+          </button>
+          <button onclick="filterProjects('web')" class="project-filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold text-navy-muted hover:text-navy hover:bg-white/50 transition-all" data-category="web">
+            Web
+          </button>
+          <button onclick="filterProjects('robotica')" class="project-filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold text-navy-muted hover:text-navy hover:bg-white/50 transition-all" data-category="robotica">
+            Robótica / IoT
+          </button>
+          <button onclick="filterProjects('ia')" class="project-filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold text-navy-muted hover:text-navy hover:bg-white/50 transition-all" data-category="ia">
+            IA & Python
+          </button>
+          <button onclick="filterProjects('games')" class="project-filter-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-mono font-bold text-navy-muted hover:text-navy hover:bg-white/50 transition-all" data-category="games">
+            Games
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid de Projetos -->
+      <div id="projectsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Projeto 1 -->
+        <div class="project-card glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between" data-category="web">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-br from-navy to-navy-light p-4 text-white flex flex-col justify-between overflow-hidden shadow-inner mb-4">
+              <div class="flex justify-between items-start">
+                <span class="bg-amber-400 text-navy font-mono text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i data-lucide="star" class="w-3 h-3 fill-navy"></i> Destaque da Semana
+                </span>
+                <span class="text-xs font-mono bg-white/20 px-2 py-0.5 rounded">3º Ano A</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-mono text-sky-300">Front-end & UX</span>
+                <h4 class="font-mono font-bold text-lg leading-tight">EcoSmart Dashboard</h4>
+              </div>
+            </div>
+            <p class="text-xs text-navy-muted leading-relaxed mb-4">
+              Painel interativo para monitoramento de consumo de energia solar e reciclagem no colégio em tempo real.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">HTML5</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Tailwind CSS</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Chart.js</span>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-navy/10">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-navy text-white text-[10px] font-bold flex items-center justify-center">GS</div>
+                <span class="text-xs font-semibold text-navy">Gabriel Silva</span>
+              </div>
+              <button onclick="openDemoModal('ecosmart')" class="text-xs font-mono font-bold text-navy hover:underline flex items-center gap-1">
+                Ver Demo <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projeto 2 -->
+        <div class="project-card glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between" data-category="robotica">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-br from-slate-800 to-navy-dark p-4 text-white flex flex-col justify-between overflow-hidden shadow-inner mb-4">
+              <div class="flex justify-between items-start">
+                <span class="bg-emerald-400 text-navy font-mono text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  Robótica / C++
+                </span>
+                <span class="text-xs font-mono bg-white/20 px-2 py-0.5 rounded">2º Ano B</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-mono text-emerald-300">Automação & Hardware</span>
+                <h4 class="font-mono font-bold text-lg leading-tight">Braço Robótico ESP32</h4>
+              </div>
+            </div>
+            <p class="text-xs text-navy-muted leading-relaxed mb-4">
+              Braço mecânico impresso em 3D e controlado via aplicativo Web local via protocolo Wi-Fi.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">C++ / Arduino</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">ESP32</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Impressão 3D</span>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-navy/10">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-emerald-700 text-white text-[10px] font-bold flex items-center justify-center">MC</div>
+                <span class="text-xs font-semibold text-navy">Mariana Costa</span>
+              </div>
+              <button onclick="openDemoModal('robotica')" class="text-xs font-mono font-bold text-navy hover:underline flex items-center gap-1">
+                Ver Demo <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projeto 3 -->
+        <div class="project-card glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between" data-category="ia">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-br from-indigo-900 to-navy-light p-4 text-white flex flex-col justify-between overflow-hidden shadow-inner mb-4">
+              <div class="flex justify-between items-start">
+                <span class="bg-sky-400 text-navy font-mono text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  IA & Dados
+                </span>
+                <span class="text-xs font-mono bg-white/20 px-2 py-0.5 rounded">3º Ano B</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-mono text-indigo-300">Machine Learning</span>
+                <h4 class="font-mono font-bold text-lg leading-tight">Previsor de Desempenho</h4>
+              </div>
+            </div>
+            <p class="text-xs text-navy-muted leading-relaxed mb-4">
+              Algoritmo em Python que prevê necessidades de reforço escolar com base no histórico de simulados.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Python 3</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Scikit-Learn</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Pandas</span>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-navy/10">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-indigo-700 text-white text-[10px] font-bold flex items-center justify-center">LA</div>
+                <span class="text-xs font-semibold text-navy">Lucas Andrade</span>
+              </div>
+              <button onclick="openDemoModal('ia')" class="text-xs font-mono font-bold text-navy hover:underline flex items-center gap-1">
+                Ver Demo <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projeto 4 -->
+        <div class="project-card glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between" data-category="games">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-br from-purple-900 to-navy p-4 text-white flex flex-col justify-between overflow-hidden shadow-inner mb-4">
+              <div class="flex justify-between items-start">
+                <span class="bg-purple-300 text-navy font-mono text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  Jogo 2D
+                </span>
+                <span class="text-xs font-mono bg-white/20 px-2 py-0.5 rounded">1º Ano A</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-mono text-purple-200">Canvas Engine</span>
+                <h4 class="font-mono font-bold text-lg leading-tight">Retro Quest Escolar</h4>
+              </div>
+            </div>
+            <p class="text-xs text-navy-muted leading-relaxed mb-4">
+              Jogo estilo aventura em pixel art onde o jogador precisa resolver enigmas de matemática e lógica.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">JavaScript</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">HTML5 Canvas</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Web Audio</span>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-navy/10">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-purple-700 text-white text-[10px] font-bold flex items-center justify-center">SP</div>
+                <span class="text-xs font-semibold text-navy">Sofia & Pedro</span>
+              </div>
+              <button onclick="openDemoModal('games')" class="text-xs font-mono font-bold text-navy hover:underline flex items-center gap-1">
+                Ver Demo <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projeto 5 -->
+        <div class="project-card glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between" data-category="web">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-br from-sky-900 to-navy-dark p-4 text-white flex flex-col justify-between overflow-hidden shadow-inner mb-4">
+              <div class="flex justify-between items-start">
+                <span class="bg-sky-300 text-navy font-mono text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  Full Stack
+                </span>
+                <span class="text-xs font-mono bg-white/20 px-2 py-0.5 rounded">3º Ano A</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-mono text-sky-200">Sistema Escolar</span>
+                <h4 class="font-mono font-bold text-lg leading-tight">Biblioteca Digital</h4>
+              </div>
+            </div>
+            <p class="text-xs text-navy-muted leading-relaxed mb-4">
+              Gerenciador de empréstimo de livros físicos com leitor de código de barras via webcam.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Node.js</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">SQLite</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">Express</span>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-navy/10">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-sky-800 text-white text-[10px] font-bold flex items-center justify-center">BR</div>
+                <span class="text-xs font-semibold text-navy">Beatriz Ramos</span>
+              </div>
+              <button onclick="openDemoModal('biblioteca')" class="text-xs font-mono font-bold text-navy hover:underline flex items-center gap-1">
+                Ver Demo <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projeto 6 -->
+        <div class="project-card glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between" data-category="robotica">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-br from-teal-900 to-navy-light p-4 text-white flex flex-col justify-between overflow-hidden shadow-inner mb-4">
+              <div class="flex justify-between items-start">
+                <span class="bg-teal-300 text-navy font-mono text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  IoT / Horta
+                </span>
+                <span class="text-xs font-mono bg-white/20 px-2 py-0.5 rounded">2º Ano A</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-mono text-teal-200">Sensores & Irrigação</span>
+                <h4 class="font-mono font-bold text-lg leading-tight">Estação Horta IoT</h4>
+              </div>
+            </div>
+            <p class="text-xs text-navy-muted leading-relaxed mb-4">
+              Monitoramento automático da umidade do solo e acionamento de válvulas solenoides na horta da escola.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">MicroPython</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">NodeMCU</span>
+              <span class="text-[10px] font-mono bg-navy/10 text-navy px-2 py-0.5 rounded-md font-semibold">MQTT</span>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-navy/10">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-teal-800 text-white text-[10px] font-bold flex items-center justify-center">EM</div>
+                <span class="text-xs font-semibold text-navy">Enzo Martins</span>
+              </div>
+              <button onclick="openDemoModal('horta')" class="text-xs font-mono font-bold text-navy hover:underline flex items-center gap-1">
+                Ver Demo <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS DE PROFESSORES E ALUNOS -->
+  <section id="depoimentos" class="py-20 bg-white/10 backdrop-blur-sm border-t border-white/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="font-mono text-xs font-bold uppercase tracking-wider text-navy bg-white/60 px-3 py-1 rounded-full border border-navy/10">
+          Comunidade Escolar
+        </span>
+        <h2 class="text-3xl font-extrabold text-navy font-mono tracking-tight mt-3">
+          O que dizem sobre o Git Showcase
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        
+        <!-- Depoimento 1 -->
+        <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+          <p class="text-xs text-navy-muted italic leading-relaxed mb-6">
+            "O Git Showcase mudou drasticamente como acompanho as entregas dos alunos. Agora posso ver a evolução do código linha a linha e dar orientações práticas no próprio sistema."
+          </p>
+          <div class="flex items-center gap-3 pt-4 border-t border-navy/10">
+            <div class="w-10 h-10 rounded-full bg-navy text-white font-bold flex items-center justify-center text-xs">
+              PR
+            </div>
+            <div>
+              <p class="font-bold text-xs text-navy">Prof. Ricardo Oliveira</p>
+              <p class="text-[11px] text-navy-muted">Coordenador de TI & Robótica</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Depoimento 2 -->
+        <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+          <p class="text-xs text-navy-muted italic leading-relaxed mb-6">
+            "Apresentei os projetos que desenvolvi no colégio pelo Git Showcase na minha entrevista de estágio e fui aprovada! Foi o meu diferencial frente a outros estudantes."
+          </p>
+          <div class="flex items-center gap-3 pt-4 border-t border-navy/10">
+            <div class="w-10 h-10 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center text-xs">
+              CL
+            </div>
+            <div>
+              <p class="font-bold text-xs text-navy">Camila Lima</p>
+              <p class="text-[11px] text-navy-muted">Ex-Aluna (Aprovada em Eng. de Software)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Depoimento 3 -->
+        <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+          <p class="text-xs text-navy-muted italic leading-relaxed mb-6">
+            "Trabalhar em equipe com colegas do 3º ano nos ajudou muito a entender git, versionamento e como estruturar um código limpo do zero."
+          </p>
+          <div class="flex items-center gap-3 pt-4 border-t border-navy/10">
+            <div class="w-10 h-10 rounded-full bg-indigo-700 text-white font-bold flex items-center justify-center text-xs">
+              HF
+            </div>
+            <div>
+              <p class="font-bold text-xs text-navy">Heitor Fernandes</p>
+              <p class="text-[11px] text-navy-muted">Aluno do 2º Ano do Ensino Médio</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="py-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="glass-card rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden border border-white">
+        
+        <div class="max-w-2xl mx-auto space-y-6 relative z-10">
+          <div class="w-14 h-14 bg-navy text-white rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+            <i data-lucide="rocket" class="w-7 h-7"></i>
+          </div>
+
+          <h2 class="text-3xl font-extrabold text-navy font-mono tracking-tight">
+            Pronto para subir seu primeiro projeto?
+          </h2>
+
+          <p class="text-xs sm:text-sm text-navy-muted leading-relaxed">
+            Acesse o portal com suas credenciais de aluno do colégio ou utilize a conta de testes para navegar pelos recursos.
+          </p>
+
+          <div class="pt-2 flex justify-center">
+            <button 
+              onclick="openLoginModal()"
+              class="px-8 py-4 rounded-xl bg-navy text-white font-mono font-bold text-sm hover:bg-navy-light active:scale-95 transition-all shadow-xl flex items-center gap-3 cursor-pointer"
+            >
+              <span>Acessar Portal de Alunos Agora</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-white/50 bg-white/30 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-xs">
+        
+        <div class="space-y-3 md:col-span-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-navy text-white flex items-center justify-center font-bold">
+              <i data-lucide="code-2" class="w-4 h-4"></i>
+            </div>
+            <span class="font-mono font-bold text-sm text-navy">Git Showcase</span>
+          </div>
+          <p class="text-navy-muted max-w-sm leading-relaxed">
+            Plataforma escolar de exibição, avaliação e armazenamento de projetos de programação desenvolvida para alunos e professores do colégio.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-mono font-bold text-navy uppercase tracking-wider mb-3">Links Rápidos</h4>
+          <ul class="space-y-2 text-navy-muted">
+            <li><a href="#sobre" class="hover:text-navy transition-colors">Sobre a Plataforma</a></li>
+            <li><a href="#recursos" class="hover:text-navy transition-colors">Recursos do Aluno</a></li>
+            <li><a href="#projetos" class="hover:text-navy transition-colors">Vitrine da Turma</a></li>
+            <li><button onclick="openLoginModal()" class="hover:text-navy transition-colors underline">Área do Aluno</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-mono font-bold text-navy uppercase tracking-wider mb-3">Suporte ao Aluno</h4>
+          <ul class="space-y-2 text-navy-muted">
+            <li><span>Laboratório de Informática</span></li>
+            <li><span class="font-mono font-bold text-navy">suporte.lab@escola.edu.br</span></li>
+            <li><button onclick="openForgotModal()" class="hover:text-navy transition-colors underline">Esqueceu sua senha?</button></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-6 border-t border-navy/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-navy-muted">
+        <div>
+          © 2026 <strong>Git Showcase</strong> — Desenvolvido para o Colégio.
+        </div>
+        <div class="flex items-center gap-4 font-mono text-[11px]">
+          <span>Ambiente Beta v2.4</span>
+          <span>•</span>
+          <span>Rede Interna Monitorada</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ==================== MODAL DE LOGIN INTEGRADO ==================== -->
+  <div id="loginModal" class="fixed inset-0 z-50 bg-navy/60 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="w-full max-w-md relative animate-fade-in">
+      
+      <!-- Botão Fechar Modal -->
+      <button 
+        onclick="closeLoginModal()" 
+        class="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-white text-navy flex items-center justify-center shadow-lg hover:bg-slate-100 transition-colors cursor-pointer"
+        aria-label="Fechar"
+      >
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <!-- CARD 1: FORMULÁRIO DE LOGIN -->
+      <div id="loginCard" class="glass-card bg-white/95 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        
+        <div class="mb-6">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-navy-muted">Git Showcase Login</span>
+          </div>
+          <h2 class="text-2xl font-extrabold text-navy font-mono tracking-tight">Identifique-se</h2>
+          <p class="text-xs text-navy-muted mt-1">Utilize seu @escola ou código de matrícula.</p>
+        </div>
+
+        <!-- Form de Login -->
+        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+          
+          <!-- Campo 1: Identificador -->
+          <div>
+            <label for="studentId" class="block text-xs font-bold text-navy uppercase tracking-wider mb-1.5">
+              E-mail ou Matrícula
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-navy-muted">
+                <i data-lucide="user" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="text" 
+                id="studentId" 
+                required
+                placeholder="ex: aluno@escola.edu.br ou 20261042"
+                class="w-full pl-10 pr-4 py-3 rounded-xl glass-input text-xs text-navy placeholder:text-navy-muted/60 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- Campo 2: Senha -->
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="password" class="block text-xs font-bold text-navy uppercase tracking-wider">
+                Senha / Código de Acesso
+              </label>
+              <button 
+                type="button" 
+                onclick="openForgotModal()" 
+                class="text-xs text-navy-muted hover:text-navy font-semibold underline underline-offset-2 transition-colors">
+                Esqueceu a senha?
+              </button>
+            </div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-navy-muted">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="password" 
+                id="password" 
+                required
+                placeholder="••••••••"
+                class="w-full pl-10 pr-12 py-3 rounded-xl glass-input text-xs text-navy placeholder:text-navy-muted/60 focus:outline-none"
+              />
+              <button 
+                type="button" 
+                onclick="togglePasswordVisibility()" 
+                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-navy-muted hover:text-navy transition-colors focus:outline-none"
+                aria-label="Alternar visibilidade da senha"
+              >
+                <i id="eyeIcon" data-lucide="eye" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Opção Lembrar Acesso -->
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 cursor-pointer text-xs text-navy-muted hover:text-navy transition-colors">
+              <input 
+                type="checkbox" 
+                id="rememberMe" 
+                class="w-4 h-4 rounded border-navy/20 text-navy focus:ring-navy/30 cursor-pointer" 
+              />
+              <span>Lembrar meu acesso neste dispositivo</span>
+            </label>
+          </div>
+
+          <!-- Botão Principal de Login -->
+          <button 
+            type="submit" 
+            id="submitBtn"
+            class="w-full py-3.5 px-6 rounded-xl bg-navy text-white font-bold text-xs tracking-wide hover:bg-navy-light active:scale-[0.99] transition-all duration-200 shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span id="btnText" class="flex items-center gap-2 font-mono">
+              Entrar no Portal <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </span>
+            <div id="btnSpinner" class="hidden">
+              <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+            </div>
+          </button>
+
+          <!-- Preenchimento rápido para testes -->
+          <div class="pt-2 text-center border-t border-navy/10">
+            <button 
+              type="button" 
+              onclick="fillTestCredentials()"
+              class="text-[11px] font-mono text-navy/70 hover:text-navy font-semibold underline"
+            >
+              ⚡ Preencher com dados de teste rápido
+            </button>
+          </div>
+        </form>
+
+      </div>
+
+      <!-- CARD 2: PAINEL PÓS-LOGIN (Visão Aluno Conectado) -->
+      <div id="welcomeCard" class="hidden glass-card bg-white/95 rounded-3xl p-6 sm:p-8 relative">
+        <div class="text-center space-y-4">
+          <div class="w-14 h-14 bg-emerald-500/10 text-emerald-600 rounded-full flex items-center justify-center mx-auto border border-emerald-500/20">
+            <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+          </div>
+
+          <div>
+            <span class="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full uppercase tracking-wider">
+              Sessão Ativa
+            </span>
+            <h2 id="welcomeName" class="text-xl font-extrabold text-navy mt-2.5 font-mono">
+              Bem-vindo(a)!
+            </h2>
+            <p class="text-xs text-navy-muted mt-1">
+              Sessão de aluno iniciada com sucesso no Git Showcase.
+            </p>
+          </div>
+
+          <!-- Informações de Perfil -->
+          <div class="bg-navy/5 rounded-2xl p-3.5 text-left space-y-2 text-xs font-sans">
+            <div class="flex justify-between py-1 border-b border-navy/10">
+              <span class="text-navy-muted">Status:</span>
+              <span class="font-bold text-emerald-600 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Matrícula Ativa
+              </span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-navy/10">
+              <span class="text-navy-muted">Identificador:</span>
+              <span id="welcomeId" class="font-mono font-semibold text-navy">aluno@escola.edu.br</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-navy-muted">Acesso:</span>
+              <span id="sessionDate" class="font-mono text-navy">--/--/----</span>
+            </div>
+          </div>
+
+          <!-- Botão Sair -->
+          <button 
+            type="button" 
+            onclick="handleLogout()"
+            class="w-full py-3 px-4 rounded-xl border border-navy/20 hover:bg-navy/10 text-navy font-bold text-xs font-mono transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <i data-lucide="log-out" class="w-4 h-4"></i> Encerrar Sessão
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== MODAL DE DEMONSTRAÇÃO DE PROJETO ==================== -->
+  <div id="demoModal" class="fixed inset-0 z-50 bg-navy/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-card bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative animate-fade-in max-h-[90vh] overflow-y-auto">
+      
+      <button 
+        onclick="closeDemoModal()" 
+        class="absolute top-4 right-4 text-navy-muted hover:text-navy p-1.5 rounded-xl hover:bg-navy/10 transition-colors cursor-pointer"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-2 mb-1">
+        <span id="demoCategory" class="text-[10px] font-mono font-bold bg-navy text-white px-2.5 py-0.5 rounded-full uppercase">
+          CATEGORIA
+        </span>
+        <span id="demoClass" class="text-[10px] font-mono text-navy-muted font-bold">3º ANO A</span>
+      </div>
+
+      <h3 id="demoTitle" class="text-2xl font-extrabold font-mono text-navy mb-2">Título do Projeto</h3>
+      <p id="demoAuthor" class="text-xs font-semibold text-navy-muted mb-4">Por Autor do Projeto</p>
+
+      <!-- Preview Interativo do Código/Saída -->
+      <div class="bg-navy-dark rounded-2xl p-4 text-slate-100 font-mono text-xs mb-4 border border-navy/40 space-y-2">
+        <div class="flex justify-between text-slate-400 border-b border-slate-700/50 pb-2 mb-2 text-[11px]">
+          <span>💻 Execução Demonstrativa</span>
+          <span>Status: Executado com Sucesso</span>
+        </div>
+        <div id="demoCodeSnippet" class="text-emerald-400 font-mono text-[11px] leading-relaxed">
+          // Simulando execução do projeto...
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs text-navy-muted leading-relaxed mb-6">
+        <h4 class="font-bold text-navy font-mono text-sm">Descrição do Aluno:</h4>
+        <p id="demoDescription">Descrição detalhada do projeto escolar...</p>
+
+        <div class="p-3 bg-navy/5 rounded-xl border border-navy/10">
+          <p class="font-bold text-navy font-mono mb-1">⭐ Nota do Professor:</p>
+          <p class="text-slate-700 italic">"Excelente estruturação de código, boa lógica e documentação completa. Aprovado para a feira de ciências!"</p>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-4 border-t border-navy/10">
+        <button 
+          onclick="closeDemoModal()" 
+          class="px-5 py-2.5 rounded-xl bg-navy/10 text-navy font-bold text-xs font-mono hover:bg-navy/20 transition-colors cursor-pointer"
+        >
+          Fechar Visualização
+        </button>
+        <button 
+          onclick="closeDemoModal(); openLoginModal();" 
+          class="px-5 py-2.5 rounded-xl bg-navy text-white font-bold text-xs font-mono hover:bg-navy-light transition-colors flex items-center gap-2 cursor-pointer"
+        >
+          <span>Entrar para Avaliar</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== MODAL ESQUECEU A SENHA ==================== -->
+  <div id="forgotModal" class="fixed inset-0 z-[60] bg-navy/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative animate-fade-in">
+      <button 
+        onclick="closeForgotModal()" 
+        class="absolute top-4 right-4 text-navy-muted hover:text-navy p-1 rounded-lg hover:bg-navy/10 transition-colors cursor-pointer"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-navy/10 text-navy flex items-center justify-center font-bold">
+          <i data-lucide="help-circle" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="font-mono font-bold text-base text-navy">Suporte ao Aluno</h3>
+          <p class="text-xs text-navy-muted">Recuperação de Acesso Escolar</p>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs text-navy-muted leading-relaxed mb-6">
+        <p>
+          O cadastro e as senhas do <strong>Git Showcase</strong> são integrados à secretaria e ao laboratório de informática do colégio.
+        </p>
+
+        <div class="p-3 bg-navy/5 rounded-xl border border-navy/10 space-y-1">
+          <p class="font-bold text-navy font-mono">🔑 Senha Padrão de Testes:</p>
+          <p>Utilize qualquer e-mail e a senha: <code class="bg-white px-2 py-0.5 rounded text-navy font-mono font-bold border border-navy/15">aluno123</code></p>
+        </div>
+
+        <div class="p-3 bg-white/70 rounded-xl border border-navy/10 space-y-1">
+          <p class="font-bold text-navy">🏫 Precisa de suporte presencial?</p>
+          <p>Procure o monitor no laboratório durante os intervalos ou envie um e-mail para:</p>
+          <p class="font-mono font-bold text-navy text-[11px] mt-1">suporte.lab@escola.edu.br</p>
+        </div>
+      </div>
+
+      <button 
+        onclick="closeForgotModal()" 
+        class="w-full py-3 rounded-xl bg-navy text-white font-bold text-xs font-mono hover:bg-navy-light transition-colors cursor-pointer"
+      >
+        Entendido
+      </button>
+    </div>
+  </div>
+
+
+  </body>
+</html>
