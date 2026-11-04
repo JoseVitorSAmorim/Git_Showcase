@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Git Showcase</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            navy: {
+              DEFAULT: '#1A2332',
+              light: '#2A3544',
+              muted: '#5A6A7A',
+              dark: '#0F1622',
+              soft: '#3B4858',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="flex flex-col justify-between text-navy min-h-screen antialiased selection:bg-navy selection:text-white">
+
+  <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+  <main class="flex-1 flex items-center justify-center px-4 py-8">
+    <div class="w-full max-w-lg">
+      
+      <div class="mb-6 text-center">
+        <a href="index.html" class="inline-flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-xl bg-navy text-white flex items-center justify-center shadow-lg">
+            <i data-lucide="code-2" class="w-5 h-5"></i>
+          </div>
+          <span class="font-mono font-bold text-lg text-navy">Git Showcase</span>
+        </a>
+      </div>
+
+      <div id="loginCard" class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+        
+        <div class="mb-6">
+          <h2 class="text-2xl font-extrabold text-navy font-mono tracking-tight">Identifique-se</h2>
+          <p class="text-sm text-navy-muted mt-1">Utilize suas credenciais de acesso ao colégio.</p>
+        </div>
+
+        <!-- Botão GitHub (desativado) -->
+        <button 
+          type="button"
+          onclick="showToast('Login via GitHub temporariamente em manutenção.', 'info')"
+          class="w-full py-3.5 px-4 rounded-xl border border-navy/20 bg-white/50 text-navy/60 font-bold text-xs font-mono flex items-center justify-center gap-2.5 shadow-sm cursor-not-allowed mb-5"
+        >
+          <i data-lucide="github" class="w-4 h-4 text-navy/60"></i>
+          <span>Entrar com GitHub (Em manutenção)</span>
+        </button>
+
+        <div class="relative flex py-2 items-center mb-4">
+          <div class="flex-grow border-t border-navy/15"></div>
+          <span class="flex-shrink mx-3 text-[11px] font-mono text-navy-muted uppercase font-semibold">Credenciais de Teste</span>
+          <div class="flex-grow border-t border-navy/15"></div>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+          
+          <div>
+            <label for="id_login" class="block text-xs font-bold text-navy uppercase tracking-wider mb-1.5">
+              E-mail ou Usuário
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-navy-muted">
+                <i data-lucide="user" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="text" 
+                name="login" 
+                id="id_login" 
+                required
+                placeholder="ex: aluno@escola.edu.br ou admin"
+                class="w-full pl-10 pr-4 py-3 rounded-xl glass-input text-sm text-navy placeholder:text-navy-muted/60 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="id_password" class="block text-xs font-bold text-navy uppercase tracking-wider mb-1.5">
+              Senha
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-navy-muted">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="password" 
+                name="password" 
+                id="id_password" 
+                required
+                placeholder="••••••••"
+                class="w-full pl-10 pr-12 py-3 rounded-xl glass-input text-sm text-navy placeholder:text-navy-muted/60 focus:outline-none"
+              />
+              <button 
+                type="button" 
+                onclick="togglePasswordVisibility()" 
+                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-navy-muted hover:text-navy transition-colors focus:outline-none"
+              >
+                <i id="eyeIcon" data-lucide="eye" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 cursor-pointer text-xs text-navy-muted hover:text-navy transition-colors">
+              <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-navy/20 text-navy focus:ring-navy/30 cursor-pointer" />
+              <span>Lembrar meu acesso</span>
+            </label>
+            <button type="button" onclick="openForgotModal()" class="text-xs text-navy-muted hover:text-navy font-semibold underline">
+              Esqueceu a senha?
+            </button>
+          </div>
+
+          <button 
+            type="submit" 
+            id="submitBtn"
+            class="w-full py-3.5 px-6 rounded-xl bg-navy text-white font-bold text-sm tracking-wide hover:bg-navy-light transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer font-mono"
+          >
+            <span id="btnText" class="flex items-center gap-2">Entrar no Portal <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+            <div id="btnSpinner" class="hidden"><i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i></div>
+          </button>
+
+          <div class="pt-2 text-center border-t border-navy/10">
+            <button type="button" onclick="fillTestCredentials()" class="text-[11px] font-mono text-navy/70 hover:text-navy font-semibold underline">
+              ⚡ Preencher com dados de teste rápido
+            </button>
+          </div>
+        </form>
+
+      </div>
+
+      <p class="text-center text-xs text-navy-muted mt-6">
+        <a href="index.html" class="hover:text-navy underline">← Voltar para a página inicial</a>
+      </p>
+
+    </div>
+  </main>
+
+  <!-- MODAL FORGOT -->
+  <div id="forgotModal" class="fixed inset-0 z-50 bg-navy/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative animate-fade-in border border-white">
+      <button type="button" onclick="closeForgotModal()" class="absolute top-4 right-4 text-navy-muted hover:text-navy p-1 rounded-lg hover:bg-navy/10 transition-colors cursor-pointer">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-navy/10 text-navy flex items-center justify-center font-bold">
+          <i data-lucide="help-circle" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="font-mono font-bold text-lg text-navy">Recuperação de Acesso</h3>
+          <p class="text-xs text-navy-muted">Suporte para alunos do colégio</p>
+        </div>
+      </div>
+      <div class="space-y-3 text-xs text-navy-muted leading-relaxed mb-6">
+        <p>Como o <strong>Git Showcase está em fase exclusiva de testes</strong>, as senhas e códigos de acesso são gerenciados pelo laboratório de informática.</p>
+        <div class="p-3 bg-navy/5 rounded-xl border border-navy/10 space-y-1">
+          <p class="font-bold text-navy font-mono">🔑 Senha Padrão de Teste:</p>
+          <p>Para qualquer conta de teste rápida, utilize a senha: <code class="bg-white px-2 py-0.5 rounded text-navy font-mono font-bold border border-navy/15">aluno123</code></p>
+        </div>
+        <div class="p-3 bg-white/70 rounded-xl border border-navy/10 space-y-1">
+          <p class="font-bold text-navy">🏫 E-mail do Laboratório:</p>
+          <p class="font-mono font-bold text-navy text-[11px] mt-0.5">suporte.lab@escola.edu.br</p>
+        </div>
+      </div>
+      <button type="button" onclick="closeForgotModal()" class="w-full py-3 rounded-xl bg-navy text-white font-bold text-xs font-mono hover:bg-navy-light transition-colors cursor-pointer">
+        Entendido / Fechar
+      </button>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

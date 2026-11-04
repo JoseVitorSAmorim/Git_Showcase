@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setupSearch();
   checkSavedAccess();
+  updateAuthUI();
 });
 
 // SISTEMA DE FILTRAGEM DOS TRABALHOS
@@ -104,7 +105,6 @@ function filterProjects(category) {
   const emptyState = document.getElementById('empty-state');
   let visibleCount = 0;
 
-  // Atualiza estilo dos botões
   buttons.forEach(btn => {
     const btnCategory = btn.getAttribute('data-category');
     if (btnCategory === category) {
@@ -114,7 +114,6 @@ function filterProjects(category) {
     }
   });
 
-  // Exibe/Oculta cards
   cards.forEach(card => {
     const cardCategory = card.getAttribute('data-category');
     const matchesCategory = category === 'all' || cardCategory === category;
@@ -129,7 +128,6 @@ function filterProjects(category) {
     }
   });
 
-  // Estado vazio
   if (emptyState) {
     if (visibleCount === 0) {
       emptyState.classList.remove('hidden');
@@ -192,7 +190,6 @@ function openDemoModal(projectId) {
   const data = projectsData[projectId];
   if (!data) return;
 
-  // Suporte a diferentes IDs de elementos nos templates
   const demoTitle = document.getElementById('demoTitle');
   const demoDesc = document.getElementById('demoDesc') || document.getElementById('demoDescription');
   const demoAuthor = document.getElementById('demoAuthor');
@@ -235,7 +232,14 @@ function copyModalRepoCmd() {
 
 // MODAL DE LOGIN
 function openLoginModal() {
-  window.location.href = "/login/";
+  // Se existir modal na página, abre; senão redireciona para login.html
+  const modal = document.getElementById('loginModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    return;
+  }
+  window.location.href = 'login.html';
 }
 
 function closeLoginModal() {
@@ -246,7 +250,7 @@ function closeLoginModal() {
   }
 }
 
-// MODAL DE ESQUECEU A SENHA / RECUPERAÇÃO DE ACESSO
+// MODAL DE ESQUECEU A SENHA
 function openForgotModal() {
   closeLoginModal();
   const modal = document.getElementById('forgotModal');
@@ -266,8 +270,8 @@ function closeForgotModal() {
 
 // PREENCHIMENTO RÁPIDO DE CREDENCIAIS DE TESTE
 function fillTestAccount(studentId, password, labelName = 'Conta de Teste') {
-  const idInput = document.getElementById('studentId');
-  const passInput = document.getElementById('password');
+  const idInput = document.getElementById('studentId') || document.getElementById('id_login');
+  const passInput = document.getElementById('password') || document.getElementById('id_password');
   if (idInput) idInput.value = studentId;
   if (passInput) passInput.value = password;
   showToast(`Preenchido: ${labelName}`, 'info');
@@ -279,28 +283,28 @@ function fillTestCredentials() {
 
 // MOSTRAR / OCULTAR SENHA
 function togglePasswordVisibility() {
-  const passwordInput = document.getElementById('password');
+  const passwordInput = document.getElementById('password') || document.getElementById('id_password');
   const eyeIcon = document.getElementById('eyeIcon');
-  if (!passwordInput || !eyeIcon) return;
+  if (!passwordInput) return;
 
   if (passwordInput.type === 'password') {
     passwordInput.type = 'text';
-    eyeIcon.setAttribute('data-lucide', 'eye-off');
+    if (eyeIcon) eyeIcon.setAttribute('data-lucide', 'eye-off');
   } else {
     passwordInput.type = 'password';
-    eyeIcon.setAttribute('data-lucide', 'eye');
+    if (eyeIcon) eyeIcon.setAttribute('data-lucide', 'eye');
   }
   if (window.lucide) {
     lucide.createIcons();
   }
 }
 
-// MANIPULAR SUBMIT DE LOGIN
+// MANIPULAR SUBMIT DE LOGIN (versão estática com localStorage)
 function handleLogin(event) {
   event.preventDefault();
 
-  const studentIdEl = document.getElementById('studentId');
-  const passwordEl = document.getElementById('password');
+  const studentIdEl = document.getElementById('studentId') || document.getElementById('id_login');
+  const passwordEl = document.getElementById('password') || document.getElementById('id_password');
   const rememberMeEl = document.getElementById('rememberMe');
 
   const studentId = studentIdEl ? studentIdEl.value.trim() : '';
@@ -312,10 +316,28 @@ function handleLogin(event) {
     return;
   }
 
+  // Validação simples de teste (qualquer usuário + senha aluno123 ou qualquer senha)
+  if (password.length < 3) {
+    showToast('Senha inválida. Use a senha de teste: aluno123', 'error');
+    return;
+  }
+
   setLoadingState(true);
 
   setTimeout(() => {
     setLoadingState(false);
+
+    // Salva sessão no localStorage
+    const displayName = studentId.includes('@')
+      ? studentId.split('@')[0]
+      : studentId;
+
+    localStorage.setItem('gs_user', JSON.stringify({
+      id: studentId,
+      name: displayName,
+      email: studentId.includes('@') ? studentId : studentId + '@escola.edu.br',
+      loggedAt: new Date().toISOString()
+    }));
 
     if (rememberMe) {
       localStorage.setItem('saved_student_id', studentId);
@@ -323,78 +345,89 @@ function handleLogin(event) {
       localStorage.removeItem('saved_student_id');
     }
 
-    closeLoginModal();
+    showToast(`Bem-vindo(a), ${displayName}!`, 'success');
 
-    // Suporte ao padrão 1: Atualizar Header
-    const openLoginBtn = document.getElementById('openLoginBtn');
-    const loggedUserBadge = document.getElementById('loggedUserBadge');
-    const userNameDisplay = document.getElementById('userNameDisplay');
-
-    if (openLoginBtn) openLoginBtn.classList.add('hidden');
-    if (loggedUserBadge) {
-      loggedUserBadge.classList.remove('hidden');
-      loggedUserBadge.classList.add('flex');
-    }
-    if (userNameDisplay) {
-      userNameDisplay.textContent = studentId.includes('@')
-        ? studentId.split('@')[0]
-        : `Aluno #${studentId}`;
-    }
-
-    // Suporte ao padrão 2: Alternar Cards (Login x Boas-Vindas)
-    const loginCard = document.getElementById('loginCard');
+    // Se estiver no modal da landing, mostra welcome ou redireciona
     const welcomeCard = document.getElementById('welcomeCard');
-    const welcomeId = document.getElementById('welcomeId');
-    const welcomeName = document.getElementById('welcomeName');
-    const sessionDate = document.getElementById('sessionDate');
+    const loginCard = document.getElementById('loginCard');
 
-    if (welcomeId) welcomeId.textContent = studentId;
-    if (welcomeName) {
-      welcomeName.textContent = studentId.includes('@')
-        ? `Bem-vindo(a), ${studentId.split('@')[0]}!`
-        : `Bem-vindo(a), Aluno #${studentId}!`;
+    if (welcomeCard && loginCard) {
+      // Fluxo modal da landing
+      const welcomeId = document.getElementById('welcomeId');
+      const welcomeName = document.getElementById('welcomeName');
+      const sessionDate = document.getElementById('sessionDate');
+
+      if (welcomeId) welcomeId.textContent = studentId;
+      if (welcomeName) welcomeName.textContent = `Bem-vindo(a), ${displayName}!`;
+      if (sessionDate) {
+        const now = new Date();
+        sessionDate.textContent = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      }
+
+      loginCard.classList.add('hidden');
+      welcomeCard.classList.remove('hidden');
+      updateAuthUI();
+    } else {
+      // Página de login standalone → vai para home
+      setTimeout(() => {
+        window.location.href = 'home.html';
+      }, 600);
     }
-
-    if (sessionDate) {
-      const now = new Date();
-      sessionDate.textContent = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    if (loginCard) loginCard.classList.add('hidden');
-    if (welcomeCard) welcomeCard.classList.remove('hidden');
-
-    showToast(`Bem-vindo(a), ${studentId}!`, 'success');
-  }, 1000);
+  }, 900);
 }
 
-// LOGOUT / ENCERRAR SESSÃO
+// LOGOUT
 function handleLogout() {
-  // Padrão Header
-  const openLoginBtn = document.getElementById('openLoginBtn');
-  const loggedUserBadge = document.getElementById('loggedUserBadge');
+  localStorage.removeItem('gs_user');
 
-  if (loggedUserBadge) {
-    loggedUserBadge.classList.add('hidden');
-    loggedUserBadge.classList.remove('flex');
-  }
-  if (openLoginBtn) openLoginBtn.classList.remove('hidden');
-
-  // Padrão Cards
   const welcomeCard = document.getElementById('welcomeCard');
   const loginCard = document.getElementById('loginCard');
-  const passwordEl = document.getElementById('password');
+  const passwordEl = document.getElementById('password') || document.getElementById('id_password');
 
   if (welcomeCard) welcomeCard.classList.add('hidden');
   if (loginCard) loginCard.classList.remove('hidden');
   if (passwordEl) passwordEl.value = '';
 
+  updateAuthUI();
   showToast('Sessão encerrada com segurança.', 'info');
+
+  // Se estiver na home, volta para a landing
+  if (window.location.pathname.includes('home.html')) {
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 500);
+  }
 }
 
-// CARREGAR USUÁRIO SALVO
+// Atualiza UI de autenticação (header etc.)
+function updateAuthUI() {
+  const userRaw = localStorage.getItem('gs_user');
+  const user = userRaw ? JSON.parse(userRaw) : null;
+
+  // Elementos da home
+  const userNameEl = document.getElementById('userDisplayName');
+  const userEmailEl = document.getElementById('userDisplayEmail');
+
+  if (userNameEl) {
+    userNameEl.textContent = user ? user.name : 'Visitante';
+  }
+  if (userEmailEl) {
+    userEmailEl.textContent = user ? user.email : 'Não autenticado';
+  }
+
+  // Botões de login/logout genéricos
+  document.querySelectorAll('[data-auth="logged"]').forEach(el => {
+    el.classList.toggle('hidden', !user);
+  });
+  document.querySelectorAll('[data-auth="guest"]').forEach(el => {
+    el.classList.toggle('hidden', !!user);
+  });
+}
+
+// CARREGAR USUÁRIO SALVO (preenche campo)
 function checkSavedAccess() {
   const savedId = localStorage.getItem('saved_student_id');
-  const studentIdEl = document.getElementById('studentId');
+  const studentIdEl = document.getElementById('studentId') || document.getElementById('id_login');
   const rememberMeEl = document.getElementById('rememberMe');
 
   if (savedId && studentIdEl) {
@@ -426,13 +459,24 @@ function setLoadingState(isLoading) {
 
 // AUXILIAR DE COPIAR TEXTO
 function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`Copiado: "${text}"`, 'success');
+    }).catch(() => {
+      fallbackCopy(text);
+    });
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
   const tempInput = document.createElement('textarea');
   tempInput.value = text;
   document.body.appendChild(tempInput);
   tempInput.select();
   document.execCommand('copy');
   document.body.removeChild(tempInput);
-
   showToast(`Copiado: "${text}"`, 'success');
 }
 
