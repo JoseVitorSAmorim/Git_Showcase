@@ -1,0 +1,13 @@
+{
+  "name": "git-showcase",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vitrine de projetos escolares com API em Node.js e SQLite",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}

@@ -480,18 +480,5 @@
   </div>
 
   <script src="js/script.js"></script>
-  <script>
-    // Garante que o nome do usuário aparece ao carregar a home
-    document.addEventListener('DOMContentLoaded', function() {
-      const userRaw = localStorage.getItem('gs_user');
-      if (userRaw) {
-        const user = JSON.parse(userRaw);
-        const nameEl = document.getElementById('userDisplayName');
-        const emailEl = document.getElementById('userDisplayEmail');
-        if (nameEl) nameEl.textContent = user.name || 'Aluno';
-        if (emailEl) emailEl.textContent = user.email || 'aluno@escola.edu.br';
-      }
-    });
-  </script>
 </body>
 </html>
