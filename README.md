@@ -1,52 +1,122 @@
+<div align="center">
+
 # Git Showcase
 
-Vitrine de repositórios dos alunos técnicos do Rondon, com backend em JavaScript/Node.js e banco de dados SQLite.
+### Projetos, ideias e tecnologia feitos por alunos.
 
-## Requisitos
+Uma vitrine escolar para explorar trabalhos, conhecer as tecnologias usadas e apresentar projetos da comunidade.
 
-- Node.js 22.5 ou superior (o projeto usa o módulo nativo `node:sqlite`).
+![Node.js 22.5+](https://img.shields.io/badge/Node.js-22.5%2B-339933?logo=node.js&logoColor=white)
+![JavaScript](https://img.shields.io/badge/Backend-JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)
 
-## Executar
+</div>
+
+## ✨ Sobre o projeto
+
+O Git Showcase reúne projetos desenvolvidos pelos alunos do colégio Rondon em uma interface responsiva. A página inicial organiza o conteúdo em abas — **Visão geral**, **Recursos**, **Projetos** e **Depoimentos** — e a vitrine permite buscar e filtrar os trabalhos.
+
+O backend em JavaScript/Node.js e a persistência em SQLite estão implementados. Para facilitar os testes da interface, o modo ativo ainda usa `localStorage`.
+
+### O que já funciona
+
+- Navegação por abas e layout adaptável a telas menores.
+- Busca, filtros e demonstração dos projetos.
+- Login de teste no modo `localStorage`.
+- Inclusão de projetos locais; o botão aparece na aba **Projetos** para usuários logados.
+- API Node.js com autenticação por sessão e operações de leitura e escrita no SQLite.
+
+> **Limitação atual:** a existência dos repositórios ainda não é verificada pela API do GitHub.
+
+## Começando
+
+### Requisitos
+
+- Node.js **22.5 ou superior** (`node:sqlite` é usado pelo backend).
+
+### Executar localmente
 
 ```bash
 npm start
 ```
 
-Abra <http://127.0.0.1:8000>. O banco SQLite é criado automaticamente fora da pasta pública do site, em `~/.git-showcase/showcase.sqlite3`. Para escolher outro caminho, defina `GIT_SHOWCASE_DB`.
+Abra <http://127.0.0.1:8000>. O servidor entrega o site e a API; mantenha o processo ativo enquanto estiver usando a aplicação.
 
-O servidor escuta em `127.0.0.1` por padrão. Para disponibilizá-lo em outra interface, defina `HOST` e `PORT` antes de iniciar. Em produção com HTTPS, defina também `GIT_SHOWCASE_SECURE_COOKIE=1`.
-
-## Persistência da interface
-
-Por enquanto, a interface usa `localStorage` para facilitar os testes no navegador. Os seis projetos de demonstração são carregados e mantidos no navegador; novos projetos retornados pelo backend também podem ser exibidos sem substituir os cards existentes. O login de teste aceita qualquer identificador e senha com pelo menos 3 caracteres. Esse modo é apenas para desenvolvimento e não autentica usuários pelo SQLite.
-
-O backend SQLite continua disponível e testado. Para ativar a autenticação e os projetos pela API/SQLite, altere `PERSISTENCE_MODE` no início de `js/script.js` de `'localStorage'` para `'sqlite'` e execute o servidor com `npm start`. Os dados salvos no `localStorage` não são migrados automaticamente para o banco.
-
-## Conta de demonstração
-
-- E-mail: `aluno@escola.edu.br`
-- Matrícula: `20261042`
-- Senha: `aluno123`
-
-Essa conta é criada apenas quando o banco ainda não contém o usuário de demonstração. Usuários podem ser cadastrados por `POST /api/auth/register`.
-
-## API
-
-- `GET /api/health` — estado do servidor.
-- `GET /api/projects?category=web&q=energia` — lista, filtra e pesquisa projetos.
-- `GET /api/projects/:id` — detalhes de um projeto.
-- `POST /api/auth/register` — cria conta e inicia sessão.
-- `POST /api/auth/login` — inicia sessão com e-mail ou matrícula.
-- `GET /api/auth/me` — consulta a sessão atual.
-- `POST /api/auth/logout` — encerra a sessão.
-- `POST /api/projects` — cria projeto autenticado.
-- `PATCH /api/projects/:id` — edita projeto próprio.
-- `DELETE /api/projects/:id` — remove projeto próprio.
-
-As rotas que recebem dados esperam `Content-Type: application/json`. As sessões usam cookies `HttpOnly`; senhas são armazenadas com scrypt. Cadastro exige senha de pelo menos 8 caracteres.
-
-## Testes
+### Testes
 
 ```bash
 npm test
+```
+
+## Persistência e autenticação
+
+### Modo de interface — `localStorage` (padrão)
+
+Em `js/script.js`, `PERSISTENCE_MODE` está definido como `'localStorage'`. Projetos criados e a sessão de teste ficam no navegador atual. Para testar o login, use qualquer identificador e uma senha com pelo menos **3 caracteres**.
+
+Esse modo é apenas para desenvolvimento: não autentica pelo SQLite e não deve ser usado como segurança em produção. Os dados armazenados no navegador não são migrados automaticamente para o banco.
+
+### Modo API/SQLite
+
+Para usar as sessões e os projetos pela API, altere `PERSISTENCE_MODE` para `'sqlite'` em `js/script.js` e inicie o servidor com `npm start`.
+
+O banco é criado automaticamente fora da pasta pública do site:
+
+```text
+<diretório pessoal>/.git-showcase/showcase.sqlite3
+```
+
+Defina `GIT_SHOWCASE_DB` para escolher outro arquivo. Na primeira inicialização de um banco vazio, é criada uma conta de demonstração:
+
+| Campo | Valor |
+| --- | --- |
+| E-mail | `aluno@escola.edu.br` |
+| Matrícula | `20261042` |
+| Senha | `aluno123` |
+
+O cadastro pela API exige senha de **8 a 256 caracteres**. As senhas são armazenadas com scrypt; as sessões usam cookies `HttpOnly` e `SameSite=Lax`.
+
+## Configuração do servidor
+
+| Variável | Padrão | Uso |
+| --- | --- | --- |
+| `HOST` | `127.0.0.1` | Interface de rede onde o servidor escuta. |
+| `PORT` | `8000` | Porta HTTP. |
+| `GIT_SHOWCASE_DB` | `~/.git-showcase/showcase.sqlite3` | Caminho alternativo para o banco SQLite. |
+| `GIT_SHOWCASE_SECURE_COOKIE` | — | Use `1` para marcar o cookie como `Secure` ao servir por HTTPS. |
+
+## API
+
+As rotas que recebem um corpo esperam `Content-Type: application/json`.
+
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| `GET` | `/api/health` | Verifica se o servidor está ativo. |
+| `GET` | `/api/projects` | Lista projetos; aceita `category` e `q` para filtrar e buscar. |
+| `GET` | `/api/projects/:id` | Consulta os detalhes de um projeto. |
+| `POST` | `/api/auth/register` | Cria uma conta e inicia uma sessão. |
+| `POST` | `/api/auth/login` | Inicia uma sessão por e-mail ou matrícula. |
+| `GET` | `/api/auth/me` | Retorna o usuário da sessão atual. |
+| `POST` | `/api/auth/logout` | Encerra a sessão. |
+| `POST` | `/api/projects` | Cria um projeto para o usuário autenticado. |
+| `PATCH` ou `PUT` | `/api/projects/:id` | Atualiza um projeto próprio. |
+| `DELETE` | `/api/projects/:id` | Exclui um projeto próprio. |
+
+Exemplo de busca:
+
+```text
+GET /api/projects?category=web&q=energia
+```
+
+## Estrutura principal
+
+```text
+├── css/styles.css       # Estilos compartilhados
+├── js/script.js         # Interface, autenticação e persistência
+├── tests/               # Testes do servidor e da API
+├── home.html            # Vitrine de projetos
+├── index.html           # Página inicial
+├── landing.html         # Landing page alternativa
+├── login.html           # Acesso de alunos
+└── server.js            # Servidor HTTP e API SQLite
 ```

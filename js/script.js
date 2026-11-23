@@ -24,6 +24,7 @@ if (typeof tailwind !== 'undefined') {
 const PERSISTENCE_MODE = 'localStorage';
 const PROJECTS_STORAGE_KEY = 'gs_projects';
 const projectsData = new Map();
+let authenticatedUser = null;
 const demoProjects = [
   {
     id: 'ecosmart', title: 'EcoSmart Dashboard', author: 'Gabriel Silva', turma: '3º Ano A',
@@ -82,11 +83,204 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.lucide) {
     lucide.createIcons();
   }
+  setupSamePageNavigation();
+  setupTabNavigation();
   setupSearch();
+  setupProjectForm();
   checkSavedAccess();
   loadProjects();
   updateAuthUI();
 });
+
+function setupProjectForm() {
+  const form = document.getElementById('projectForm');
+  if (form) form.addEventListener('submit', handleCreateProject);
+}
+
+function setupSamePageNavigation() {
+  const currentUrl = new URL(window.location.href);
+
+  document.querySelectorAll('a[href]').forEach((link) => {
+    if (link.hasAttribute('data-tab-target')) return;
+
+    const destination = new URL(link.href, currentUrl);
+    if (
+      destination.origin !== currentUrl.origin
+      || destination.pathname !== currentUrl.pathname
+      || destination.search !== currentUrl.search
+      || destination.hash
+    ) return;
+
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      document.querySelector('[role="tab"][data-tab-target="sobre"]')?.click();
+      window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+}
+
+function setupTabNavigation() {
+  const controls = [...document.querySelectorAll('[data-tab-target]')];
+  const panels = [...document.querySelectorAll('[data-tab-panel]')];
+  const tabs = controls.filter((control) => control.getAttribute('role') === 'tab');
+  if (tabs.length === 0 || panels.length === 0) return;
+
+  function activateTab(tabId, updateUrl = true) {
+    if (!panels.some((panel) => panel.dataset.tabPanel === tabId)) return;
+
+    panels.forEach((panel) => {
+      panel.classList.toggle('hidden', panel.dataset.tabPanel !== tabId);
+    });
+    tabs.forEach((tab) => {
+      const active = tab.dataset.tabTarget === tabId;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+      tab.classList.toggle('bg-navy', active);
+      tab.classList.toggle('text-white', active);
+      tab.classList.toggle('text-navy-muted', !active);
+    });
+    updateAuthControls(authenticatedUser);
+
+    if (updateUrl && window.location.hash !== `#${tabId}`) {
+      window.history.pushState({ tab: tabId }, '', `#${tabId}`);
+    }
+    if (updateUrl) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  controls.forEach((control) => {
+    control.addEventListener('click', (event) => {
+      if (control.tagName === 'A') event.preventDefault();
+      const activeTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
+      if (activeTab?.dataset.tabTarget === control.dataset.tabTarget) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      activateTab(control.dataset.tabTarget);
+    });
+  });
+
+  const tabList = document.querySelector('[role="tablist"]');
+  tabList?.addEventListener('keydown', (event) => {
+    const activeIndex = Math.max(0, tabs.indexOf(document.activeElement));
+    let nextIndex;
+    if (event.key === 'ArrowRight') nextIndex = (activeIndex + 1) % tabs.length;
+    else if (event.key === 'ArrowLeft') nextIndex = (activeIndex - 1 + tabs.length) % tabs.length;
+    else if (event.key === 'Home') nextIndex = 0;
+    else if (event.key === 'End') nextIndex = tabs.length - 1;
+    else return;
+
+    event.preventDefault();
+    tabs[nextIndex].focus();
+    activateTab(tabs[nextIndex].dataset.tabTarget);
+  });
+
+  window.addEventListener('popstate', () => {
+    activateTab(window.location.hash.slice(1) || 'sobre', false);
+  });
+
+  const initialTab = window.location.hash.slice(1);
+  activateTab(panels.some((panel) => panel.dataset.tabPanel === initialTab) ? initialTab : 'sobre', false);
+}
+
+function requireProjectLogin() {
+  if (authenticatedUser) return true;
+
+  closeProjectModal();
+  showToast('Entre no portal para adicionar um projeto.', 'info');
+  if (document.getElementById('loginModal')) openLoginModal();
+  else window.location.href = 'login.html';
+  return false;
+}
+
+function updateAuthControls(user) {
+  const activeTab = document.querySelector('[role="tab"][aria-selected="true"]')?.dataset.tabTarget;
+
+  document.querySelectorAll('[data-auth="logged"]').forEach((el) => {
+    const requiredTab = el.dataset.authTab;
+    el.classList.toggle('hidden', !user || (requiredTab && requiredTab !== activeTab));
+  });
+  document.querySelectorAll('[data-auth="guest"]').forEach((el) => {
+    el.classList.toggle('hidden', !!user);
+  });
+}
+
+function openProjectModal() {
+  if (!requireProjectLogin()) return;
+  const modal = document.getElementById('projectModal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  document.getElementById('projectTitle')?.focus();
+}
+
+function closeProjectModal() {
+  const modal = document.getElementById('projectModal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
+
+async function handleCreateProject(event) {
+  event.preventDefault();
+  if (!requireProjectLogin()) return;
+  const form = event.currentTarget;
+  const values = new FormData(form);
+  const techs = String(values.get('techs') || '')
+    .split(',')
+    .map((technology) => technology.trim())
+    .filter(Boolean);
+
+  if (techs.length === 0 || techs.length > 12 || techs.some((technology) => technology.length > 40)) {
+    showToast('Informe de 1 a 12 tecnologias, com até 40 caracteres cada.', 'error');
+    return;
+  }
+
+  const repoUrl = String(values.get('repo_url') || '').trim();
+  const project = {
+    id: `project-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    title: String(values.get('title') || '').trim(),
+    author: String(values.get('author') || '').trim(),
+    turma: String(values.get('turma') || '').trim(),
+    category: String(values.get('category') || ''),
+    techs,
+    desc: String(values.get('desc') || '').trim(),
+    repo_url: repoUrl,
+    repoCmd: `git clone ${repoUrl}`,
+    codeSnippet: String(values.get('codeSnippet') || '').trim(),
+  };
+
+  try {
+    if (PERSISTENCE_MODE === 'localStorage') {
+      const projects = loadLocalProjects();
+      projects.push(project);
+      localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
+    } else {
+      const result = await apiRequest('/api/projects', {
+        method: 'POST',
+        body: JSON.stringify(project),
+      });
+      Object.assign(project, result.project);
+    }
+
+    projectsData.set(project.id, project);
+    const grid = document.getElementById('projectsGrid');
+    if (grid) grid.appendChild(createProjectCard(project));
+    filterProjects(currentActiveCategory);
+
+    const searchInput = document.getElementById('search-input');
+    if (searchInput?.value) searchInput.dispatchEvent(new Event('input'));
+
+    form.reset();
+    closeProjectModal();
+    showToast('Projeto adicionado à vitrine.', 'success');
+    if (window.lucide) lucide.createIcons();
+  } catch (error) {
+    showToast(`Não foi possível adicionar o projeto: ${error.message}`, 'error');
+  }
+}
 
 async function apiRequest(path, options = {}) {
   const response = await fetch(path, {
@@ -337,9 +531,19 @@ async function openDemoModal(projectId) {
   if (demoDesc) demoDesc.textContent = data.desc;
   if (demoAuthor) demoAuthor.textContent = data.author.startsWith('Por:') ? data.author : `Por: ${data.author}`;
   if (demoTurma) demoTurma.textContent = data.turma;
-  if (demoTechs) demoTechs.textContent = Array.isArray(data.techs) ? data.techs.join(', ') : data.techs;
+  if (demoTechs) {
+    const technologies = Array.isArray(data.techs)
+      ? data.techs
+      : String(data.techs || '').split(',').map(technology => technology.trim()).filter(Boolean);
+    demoTechs.replaceChildren(...technologies.map(technology => {
+      const tag = document.createElement('span');
+      tag.className = 'rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-semibold text-violet-900';
+      tag.textContent = technology;
+      return tag;
+    }));
+  }
   if (demoBadge) demoBadge.textContent = categoryStyles[data.category]?.label || data.category;
-  if (demoRepoCmd) demoRepoCmd.textContent = data.repoCmd;
+  if (demoRepoCmd) demoRepoCmd.textContent = data.repoCmd || `git clone ${data.repo_url || ''}`.trim();
   if (demoCodeSnippet) demoCodeSnippet.textContent = data.codeSnippet;
 
   const modal = document.getElementById('demoModal');
@@ -554,6 +758,8 @@ async function updateAuthUI(knownUser) {
     }
   }
 
+  authenticatedUser = user;
+
   // Elementos da home
   const userNameEl = document.getElementById('userDisplayName');
   const userEmailEl = document.getElementById('userDisplayEmail');
@@ -565,13 +771,7 @@ async function updateAuthUI(knownUser) {
     userEmailEl.textContent = user ? user.email : 'Não autenticado';
   }
 
-  // Botões de login/logout genéricos
-  document.querySelectorAll('[data-auth="logged"]').forEach(el => {
-    el.classList.toggle('hidden', !user);
-  });
-  document.querySelectorAll('[data-auth="guest"]').forEach(el => {
-    el.classList.toggle('hidden', !!user);
-  });
+  updateAuthControls(user);
 }
 
 // CARREGAR USUÁRIO SALVO (preenche campo)
