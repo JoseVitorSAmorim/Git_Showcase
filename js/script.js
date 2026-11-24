@@ -94,7 +94,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupProjectForm() {
   const form = document.getElementById('projectForm');
-  if (form) form.addEventListener('submit', handleCreateProject);
+  if (!form) return;
+
+  form.addEventListener('submit', handleCreateProject);
+  form.querySelector('#verifyGithubButton')?.addEventListener('click', () => {
+    verifyProjectRepository(form);
+  });
+  form.querySelector('[name="repo_url"]')?.addEventListener('input', () => {
+    const status = form.querySelector('#githubVerificationStatus');
+    if (status) {
+      status.textContent = 'Simulação demonstrativa: nenhuma chamada será enviada ao GitHub.';
+      status.className = 'mt-2 text-xs text-navy-muted';
+    }
+  });
+}
+
+async function verifyProjectRepository(form) {
+  const repoInput = form.querySelector('[name="repo_url"]');
+  const status = form.querySelector('#githubVerificationStatus');
+  const verifyButton = form.querySelector('#verifyGithubButton');
+  const submitButton = form.querySelector('[type="submit"]');
+  if (!repoInput || !status || !verifyButton || !submitButton) return false;
+
+  verifyButton.disabled = true;
+  submitButton.disabled = true;
+  status.textContent = 'Simulando consulta à API do GitHub...';
+  status.className = 'mt-2 text-xs font-semibold text-sky-800';
+
+  try {
+    const repoUrl = new URL(repoInput.value.trim());
+    const parts = repoUrl.pathname.split('/').filter(Boolean);
+    if (
+      !['http:', 'https:'].includes(repoUrl.protocol)
+      || repoUrl.hostname.toLowerCase() !== 'github.com'
+      || repoUrl.username
+      || repoUrl.password
+      || repoUrl.search
+      || repoUrl.hash
+      || parts.length !== 2
+    ) {
+      throw new Error('Use o link direto no formato https://github.com/usuario/repositorio.');
+    }
+
+    const owner = parts[0];
+    const repository = parts[1].replace(/\.git$/i, '');
+    if (
+      !/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37})$/.test(owner)
+      || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/.test(repository)
+      || repository === '.'
+      || repository === '..'
+    ) {
+      throw new Error('O usuário ou nome do repositório não tem um formato válido.');
+    }
+
+    await new Promise((resolve) => window.setTimeout(resolve, 650));
+    status.textContent = `Simulação concluída: ${owner}/${repository} passou pela validação de formato. Nenhuma consulta real foi feita ao GitHub.`;
+    status.className = 'mt-2 text-xs font-semibold text-emerald-800';
+    return true;
+  } catch (error) {
+    status.textContent = `Simulação não aprovada: ${error.message}`;
+    status.className = 'mt-2 text-xs font-semibold text-rose-700';
+    return false;
+  } finally {
+    verifyButton.disabled = false;
+    submitButton.disabled = false;
+  }
 }
 
 function setupSamePageNavigation() {
@@ -197,10 +261,14 @@ function requireProjectLogin() {
 
 function updateAuthControls(user) {
   const activeTab = document.querySelector('[role="tab"][aria-selected="true"]')?.dataset.tabTarget;
+  const loginScreenOpen = ['loginModal', 'forgotModal'].some((id) => {
+    const modal = document.getElementById(id);
+    return modal && !modal.classList.contains('hidden');
+  });
 
   document.querySelectorAll('[data-auth="logged"]').forEach((el) => {
     const requiredTab = el.dataset.authTab;
-    el.classList.toggle('hidden', !user || (requiredTab && requiredTab !== activeTab));
+    el.classList.toggle('hidden', !user || loginScreenOpen || (requiredTab && requiredTab !== activeTab));
   });
   document.querySelectorAll('[data-auth="guest"]').forEach((el) => {
     el.classList.toggle('hidden', !!user);
@@ -239,6 +307,8 @@ async function handleCreateProject(event) {
   }
 
   const repoUrl = String(values.get('repo_url') || '').trim();
+  if (!await verifyProjectRepository(form)) return;
+
   const project = {
     id: `project-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     title: String(values.get('title') || '').trim(),
@@ -575,6 +645,7 @@ function openLoginModal() {
   if (modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    updateAuthControls(authenticatedUser);
     return;
   }
   window.location.href = 'login.html';
@@ -585,6 +656,7 @@ function closeLoginModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    updateAuthControls(authenticatedUser);
   }
 }
 
@@ -595,6 +667,7 @@ function openForgotModal() {
   if (modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    updateAuthControls(authenticatedUser);
   }
 }
 
@@ -603,6 +676,7 @@ function closeForgotModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    updateAuthControls(authenticatedUser);
   }
 }
 

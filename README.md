@@ -26,8 +26,6 @@ O backend em JavaScript/Node.js e a persistência em SQLite estão implementados
 - Inclusão de projetos locais; o botão aparece na aba **Projetos** para usuários logados.
 - API Node.js com autenticação por sessão e operações de leitura e escrita no SQLite.
 
-> **Limitação atual:** a existência dos repositórios ainda não é verificada pela API do GitHub.
-
 ## Começando
 
 ### Requisitos
