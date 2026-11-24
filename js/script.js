@@ -103,7 +103,7 @@ function setupProjectForm() {
   form.querySelector('[name="repo_url"]')?.addEventListener('input', () => {
     const status = form.querySelector('#githubVerificationStatus');
     if (status) {
-      status.textContent = 'Simulação demonstrativa: nenhuma chamada será enviada ao GitHub.';
+      status.textContent = '';
       status.className = 'mt-2 text-xs text-navy-muted';
     }
   });
@@ -118,7 +118,7 @@ async function verifyProjectRepository(form) {
 
   verifyButton.disabled = true;
   submitButton.disabled = true;
-  status.textContent = 'Simulando consulta à API do GitHub...';
+  status.textContent = 'Verificando link...';
   status.className = 'mt-2 text-xs font-semibold text-sky-800';
 
   try {
@@ -148,11 +148,11 @@ async function verifyProjectRepository(form) {
     }
 
     await new Promise((resolve) => window.setTimeout(resolve, 650));
-    status.textContent = `Simulação concluída: ${owner}/${repository} passou pela validação de formato. Nenhuma consulta real foi feita ao GitHub.`;
+    status.textContent = `Formato do link válido: ${owner}/${repository}.`;
     status.className = 'mt-2 text-xs font-semibold text-emerald-800';
     return true;
   } catch (error) {
-    status.textContent = `Simulação não aprovada: ${error.message}`;
+    status.textContent = `Link inválido: ${error.message}`;
     status.className = 'mt-2 text-xs font-semibold text-rose-700';
     return false;
   } finally {
