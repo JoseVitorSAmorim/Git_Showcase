@@ -1,11 +1,11 @@
 /* ===== BASE & BACKGROUND GLOBAIS ===== */
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: #edf2f8;
+  background-color: #aab8ca;
   background-image:
-    radial-gradient(50rem 34rem at 0% 0%, rgba(101, 144, 196, 0.2), transparent 68%),
-    radial-gradient(42rem 30rem at 100% 18%, rgba(34, 128, 120, 0.12), transparent 65%),
-    linear-gradient(135deg, #f7f9fc 0%, #eaf0f7 52%, #f5f3ef 100%);
+    radial-gradient(50rem 34rem at 0% 0%, rgba(50, 79, 120, 0.24), transparent 68%),
+    radial-gradient(42rem 30rem at 100% 18%, rgba(21, 100, 96, 0.18), transparent 65%),
+    linear-gradient(135deg, #a8b8cd 0%, #bac5d4 52%, #d2cec5 100%);
   background-attachment: fixed;
   color: #1A2332;
   min-height: 100vh;
@@ -46,25 +46,25 @@ body {
 
 /* ===== EFEITOS GLASSMORPHISM ===== */
 .glass-nav {
-  background: rgba(248, 250, 253, 0.82);
+  background: rgba(218, 227, 238, 0.9);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.78);
-  box-shadow: 0 8px 28px rgba(26, 35, 50, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.62);
+  box-shadow: 0 8px 28px rgba(26, 35, 50, 0.11);
 }
 
 .glass-header {
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(205, 217, 232, 0.72);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.76);
+  background: rgba(224, 232, 242, 0.86);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.82);
-  box-shadow: 0 16px 38px rgba(26, 35, 50, 0.075);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 16px 38px rgba(26, 35, 50, 0.13);
 }
 
 .glass-card-hover {
@@ -77,19 +77,19 @@ body {
 
 .glass-card-hover:hover {
   transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.92);
-  border-color: #ffffff;
-  box-shadow: 0 24px 48px rgba(26, 35, 50, 0.13);
+  background: rgba(236, 241, 248, 0.96);
+  border-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 48px rgba(26, 35, 50, 0.18);
 }
 
 .glass-badge {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(219, 228, 239, 0.76);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.64);
 }
 
 .glass-input {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(239, 243, 248, 0.94);
   border: 1px solid rgba(90, 106, 122, 0.25);
   transition: all 0.2s ease-in-out;
 }
@@ -178,7 +178,7 @@ select:focus-visible {
 }
 
 .project-card {
-  border-color: rgba(255, 255, 255, 0.86);
+  border-color: rgba(255, 255, 255, 0.72);
 }
 
 #projectModal:not(.hidden),
