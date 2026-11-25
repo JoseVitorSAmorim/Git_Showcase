@@ -25,6 +25,7 @@ const PERSISTENCE_MODE = 'localStorage';
 const PROJECTS_STORAGE_KEY = 'gs_projects';
 const projectsData = new Map();
 let authenticatedUser = null;
+let pendingDeleteProjectId = null;
 const demoProjects = [
   {
     id: 'ecosmart', title: 'EcoSmart Dashboard', author: 'Gabriel Silva', turma: '3º Ano A',
@@ -87,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTabNavigation();
   setupSearch();
   setupProjectForm();
+  setupDeleteConfirmation();
   checkSavedAccess();
   loadProjects();
   updateAuthUI();
@@ -105,6 +107,30 @@ function setupProjectForm() {
     if (status) {
       status.textContent = '';
       status.className = 'mt-2 text-xs text-navy-muted';
+    }
+  });
+}
+
+function setupDeleteConfirmation() {
+  document.addEventListener('keydown', (event) => {
+    const modal = document.getElementById('deleteConfirmModal');
+    if (!modal || modal.classList.contains('hidden')) return;
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeDeleteConfirmation();
+      return;
+    }
+
+    if (event.key !== 'Tab') return;
+    const buttons = [...modal.querySelectorAll('button:not(:disabled)')];
+    if (buttons.length === 0) return;
+    if (event.shiftKey && document.activeElement === buttons[0]) {
+      event.preventDefault();
+      buttons.at(-1).focus();
+    } else if (!event.shiftKey && document.activeElement === buttons.at(-1)) {
+      event.preventDefault();
+      buttons[0].focus();
     }
   });
 }
@@ -311,6 +337,7 @@ async function handleCreateProject(event) {
 
   const project = {
     id: `project-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    ownerId: authenticatedUser.id,
     title: String(values.get('title') || '').trim(),
     author: String(values.get('author') || '').trim(),
     turma: String(values.get('turma') || '').trim(),
@@ -616,10 +643,88 @@ async function openDemoModal(projectId) {
   if (demoRepoCmd) demoRepoCmd.textContent = data.repoCmd || `git clone ${data.repo_url || ''}`.trim();
   if (demoCodeSnippet) demoCodeSnippet.textContent = data.codeSnippet;
 
+  const deleteButton = document.getElementById('deleteProjectButton');
+  if (deleteButton) {
+    deleteButton.classList.toggle('hidden', !isProjectOwner(data));
+    deleteButton.dataset.projectId = data.id;
+  }
+
   const modal = document.getElementById('demoModal');
   if (modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+  }
+}
+
+function isProjectOwner(project) {
+  return Boolean(authenticatedUser && (
+    project.isOwner === true
+    || (project.ownerId != null && String(project.ownerId) === String(authenticatedUser.id))
+  ));
+}
+
+function openDeleteConfirmation(projectId) {
+  const project = projectsData.get(projectId);
+  if (!project || !isProjectOwner(project)) {
+    showToast('Você só pode excluir projetos adicionados por você.', 'error');
+    return;
+  }
+
+  pendingDeleteProjectId = projectId;
+  const projectName = document.getElementById('deleteConfirmProjectName');
+  if (projectName) projectName.textContent = project.title;
+  const modal = document.getElementById('deleteConfirmModal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  document.getElementById('cancelDeleteProjectButton')?.focus();
+}
+
+function closeDeleteConfirmation(restoreFocus = true) {
+  const modal = document.getElementById('deleteConfirmModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+  pendingDeleteProjectId = null;
+  if (restoreFocus) document.getElementById('deleteProjectButton')?.focus();
+}
+
+async function confirmProjectDeletion() {
+  const projectId = pendingDeleteProjectId;
+  const project = projectId ? projectsData.get(projectId) : null;
+  if (!project || !isProjectOwner(project)) {
+    closeDeleteConfirmation();
+    showToast('Você só pode excluir projetos adicionados por você.', 'error');
+    return;
+  }
+
+  const confirmButton = document.getElementById('confirmDeleteProjectButton');
+  const cancelButton = document.getElementById('cancelDeleteProjectButton');
+  if (confirmButton) confirmButton.disabled = true;
+  if (cancelButton) cancelButton.disabled = true;
+
+  try {
+    if (PERSISTENCE_MODE === 'localStorage') {
+      const projects = loadLocalProjects().filter((item) => item.id !== projectId);
+      localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
+    } else {
+      await apiRequest(`/api/projects/${encodeURIComponent(projectId)}`, { method: 'DELETE' });
+    }
+
+    projectsData.delete(projectId);
+    document.querySelector(`.project-card[data-project-id="${CSS.escape(projectId)}"]`)?.remove();
+    closeDeleteConfirmation(false);
+    closeDemoModal();
+    showToast('Projeto excluído da vitrine.', 'success');
+    filterProjects(currentActiveCategory);
+    const searchInput = document.getElementById('search-input');
+    if (searchInput?.value) searchInput.dispatchEvent(new Event('input'));
+  } catch (error) {
+    showToast(`Não foi possível excluir o projeto: ${error.message}`, 'error');
+  } finally {
+    if (confirmButton) confirmButton.disabled = false;
+    if (cancelButton) cancelButton.disabled = false;
   }
 }
 

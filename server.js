@@ -173,9 +173,10 @@ function serializeUser(user) {
   };
 }
 
-function serializeProject(project) {
+function serializeProject(project, currentUserId = null) {
   return {
     id: project.id,
+    isOwner: project.owner_id != null && project.owner_id === currentUserId,
     title: project.title,
     author: project.author,
     turma: project.turma,
@@ -351,6 +352,7 @@ async function handleApi(request, response, db, url) {
   }
 
   if (method === 'GET' && pathname === '/api/projects') {
+    const user = getCurrentUser(db, request);
     const category = (searchParams.get('category') || '').trim().toLowerCase();
     const search = (searchParams.get('q') || '').trim().slice(0, 100);
     if (category && category !== 'all' && !CATEGORIES.has(category)) {
@@ -371,7 +373,7 @@ async function handleApi(request, response, db, url) {
       params.push(...Array(4).fill(`%${escaped}%`));
     }
     sql += ' ORDER BY created_at DESC, title COLLATE NOCASE';
-    const projects = db.prepare(sql).all(...params).map(serializeProject);
+    const projects = db.prepare(sql).all(...params).map((project) => serializeProject(project, user?.id));
     sendJson(response, 200, { projects });
     return;
   }
@@ -380,7 +382,8 @@ async function handleApi(request, response, db, url) {
   if (method === 'GET' && projectMatch) {
     const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(projectMatch[1]);
     if (!project) throw new HttpError(404, 'Projeto não encontrado.');
-    sendJson(response, 200, { project: serializeProject(project) });
+    const user = getCurrentUser(db, request);
+    sendJson(response, 200, { project: serializeProject(project, user?.id) });
     return;
   }
 
@@ -465,7 +468,7 @@ async function handleApi(request, response, db, url) {
       fields.description, fields.repo_url, fields.code_snippet, user.id, Date.now(),
     );
     const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(projectId);
-    sendJson(response, 201, { project: serializeProject(project) });
+    sendJson(response, 201, { project: serializeProject(project, user.id) });
     return;
   }
 
@@ -483,7 +486,7 @@ async function handleApi(request, response, db, url) {
       fields.repo_url, fields.code_snippet, projectMatch[1],
     );
     const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(projectMatch[1]);
-    sendJson(response, 200, { project: serializeProject(project) });
+    sendJson(response, 200, { project: serializeProject(project, user.id) });
     return;
   }
 

@@ -43,6 +43,7 @@ test('health and seeded project list are available', async () => {
   assert.equal(catalog.response.status, 200);
   assert.deepEqual(catalog.body.projects.map((project) => project.id), ['horta']);
   assert.deepEqual(catalog.body.projects[0].techs, ['MicroPython', 'NodeMCU', 'MQTT']);
+  assert.equal(catalog.body.projects[0].isOwner, false);
 });
 
 test('login, current session, and logout use an HTTP-only cookie', async () => {
@@ -91,6 +92,7 @@ test('registered user can create, edit, and delete an owned project', async () =
   assert.equal(created.response.status, 201);
   const projectId = created.body.project.id;
   assert.equal(created.body.project.author, 'Pessoa Teste');
+  assert.equal(created.body.project.isOwner, true);
 
   const updated = await request('PATCH', `/api/projects/${projectId}`, { title: 'Projeto Atualizado' }, true);
   assert.equal(updated.response.status, 200);
