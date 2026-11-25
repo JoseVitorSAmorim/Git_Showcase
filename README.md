@@ -16,14 +16,14 @@ Uma vitrine escolar para explorar trabalhos, conhecer as tecnologias usadas e ap
 
 O Git Showcase reúne projetos desenvolvidos pelos alunos do colégio Rondon em uma interface responsiva. A página inicial organiza o conteúdo em abas — **Visão geral**, **Recursos**, **Projetos** e **Depoimentos** — e a vitrine permite buscar e filtrar os trabalhos.
 
-O backend em JavaScript/Node.js e a persistência em SQLite estão implementados. Para facilitar os testes da interface, o modo ativo ainda usa `localStorage`.
+O backend em JavaScript/Node.js e a persistência em SQLite estão implementados. Para facilitar os testes da interface, o modo ativo guarda os projetos temporariamente na sessão da guia.
 
 ### O que já funciona
 
 - Navegação por abas e layout adaptável a telas menores.
 - Busca, filtros e demonstração dos projetos.
-- Login de teste no modo `localStorage`.
-- Inclusão de projetos locais; o botão aparece na aba **Projetos** para usuários logados.
+- Login de teste no navegador.
+- Inclusão temporária de projetos; eles ficam disponíveis na guia atual e somem quando ela é fechada.
 - API Node.js com autenticação por sessão e operações de leitura e escrita no SQLite.
 
 ## Começando
@@ -48,9 +48,9 @@ npm test
 
 ## Persistência e autenticação
 
-### Modo de interface — `localStorage` (padrão)
+### Modo de interface — sessão da guia (padrão)
 
-Em `js/script.js`, `PERSISTENCE_MODE` está definido como `'localStorage'`. Projetos criados e a sessão de teste ficam no navegador atual. Para testar o login, use qualquer identificador e uma senha com pelo menos **3 caracteres**.
+Em `js/script.js`, `PERSISTENCE_MODE` está definido como `'browser'` para usar o fluxo de teste no navegador. Os projetos ficam em `sessionStorage`: continuam disponíveis após recarregar a página, mas são removidos ao fechar a guia. Projetos antigos em `localStorage` são transferidos para a sessão da guia e removidos do armazenamento persistente na primeira leitura. A sessão de teste e o identificador lembrado do login continuam em `localStorage`. Para testar o login, use qualquer identificador e uma senha com pelo menos **3 caracteres**.
 
 Esse modo é apenas para desenvolvimento: não autentica pelo SQLite e não deve ser usado como segurança em produção. Os dados armazenados no navegador não são migrados automaticamente para o banco.
 

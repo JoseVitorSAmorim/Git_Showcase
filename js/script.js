@@ -21,7 +21,7 @@ if (typeof tailwind !== 'undefined') {
   };
 }
 
-const PERSISTENCE_MODE = 'localStorage';
+const PERSISTENCE_MODE = 'browser';
 const PROJECTS_STORAGE_KEY = 'gs_projects';
 const projectsData = new Map();
 let authenticatedUser = null;
@@ -350,10 +350,10 @@ async function handleCreateProject(event) {
   };
 
   try {
-    if (PERSISTENCE_MODE === 'localStorage') {
+    if (PERSISTENCE_MODE === 'browser') {
       const projects = loadLocalProjects();
       projects.push(project);
-      localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
+      sessionStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
     } else {
       const result = await apiRequest('/api/projects', {
         method: 'POST',
@@ -400,7 +400,7 @@ async function loadProjects() {
   if (!grid) return;
 
   try {
-    const projects = PERSISTENCE_MODE === 'localStorage'
+    const projects = PERSISTENCE_MODE === 'browser'
       ? loadLocalProjects()
       : (await apiRequest('/api/projects')).projects;
     projectsData.clear();
@@ -432,9 +432,18 @@ async function loadProjects() {
 }
 
 function loadLocalProjects() {
-  const storedProjects = localStorage.getItem(PROJECTS_STORAGE_KEY);
+  let storedProjects = sessionStorage.getItem(PROJECTS_STORAGE_KEY);
+  const legacyProjects = localStorage.getItem(PROJECTS_STORAGE_KEY);
+  if (storedProjects === null && legacyProjects !== null) {
+    sessionStorage.setItem(PROJECTS_STORAGE_KEY, legacyProjects);
+    storedProjects = legacyProjects;
+  }
+  if (legacyProjects !== null) {
+    localStorage.removeItem(PROJECTS_STORAGE_KEY);
+  }
+
   if (storedProjects === null) {
-    localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(demoProjects));
+    sessionStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(demoProjects));
     return demoProjects;
   }
 
@@ -445,7 +454,7 @@ function loadLocalProjects() {
   const savedIds = new Set(projects.map((project) => project.id));
   const completeProjects = [...projects, ...demoProjects.filter((project) => !savedIds.has(project.id))];
   if (completeProjects.length !== projects.length) {
-    localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(completeProjects));
+    sessionStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(completeProjects));
   }
   return completeProjects;
 }
@@ -705,9 +714,9 @@ async function confirmProjectDeletion() {
   if (cancelButton) cancelButton.disabled = true;
 
   try {
-    if (PERSISTENCE_MODE === 'localStorage') {
+    if (PERSISTENCE_MODE === 'browser') {
       const projects = loadLocalProjects().filter((item) => item.id !== projectId);
-      localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
+      sessionStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
     } else {
       await apiRequest(`/api/projects/${encodeURIComponent(projectId)}`, { method: 'DELETE' });
     }
@@ -835,7 +844,7 @@ async function handleLogin(event) {
   setLoadingState(true);
   try {
     let user;
-    if (PERSISTENCE_MODE === 'localStorage') {
+    if (PERSISTENCE_MODE === 'browser') {
       if (password.length < 3) {
         throw new Error('A senha deve ter pelo menos 3 caracteres para o teste.');
       }
@@ -889,7 +898,7 @@ async function handleLogin(event) {
 
 // LOGOUT
 async function handleLogout() {
-  if (PERSISTENCE_MODE === 'localStorage') {
+  if (PERSISTENCE_MODE === 'browser') {
     localStorage.removeItem('gs_user');
   } else {
     try {
@@ -922,7 +931,7 @@ async function handleLogout() {
 async function updateAuthUI(knownUser) {
   let user = knownUser;
   if (arguments.length === 0) {
-    if (PERSISTENCE_MODE === 'localStorage') {
+    if (PERSISTENCE_MODE === 'browser') {
       const savedUser = localStorage.getItem('gs_user');
       user = savedUser ? JSON.parse(savedUser) : null;
     } else {
